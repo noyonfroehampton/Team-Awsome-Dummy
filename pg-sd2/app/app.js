@@ -16,7 +16,15 @@ const db = require('./services/db');
 
 // Create a route for root - /
 app.get("/", function(req, res) {
-    res.render("index");
+    // 1. Define the SQL query
+    var sql = 'SELECT * FROM test_table';
+    
+    // 2. Query the database
+    db.query(sql).then(results => {
+        // 3. Render the PUG page and pass the database results to it
+        // We are naming the data "communityMembers" so PUG can use it
+        res.render("index", { communityMembers: results });
+    });
 });
 
 // Create a route for testing the db

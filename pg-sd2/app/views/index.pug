@@ -4,7 +4,10 @@ html
   body
     h1 Welcome to the Community Exchange!
     p A cooperative space to share and exchange goods and services.
+    
+    h2 Our Founding Members:
     ul
-      li Connect with neighbours
-      li Share resources
-      li Build community
+      // Loop through the data we passed from Express
+      each member in communityMembers
+        // Display the 'name' column from the database
+        li= member.name
