@@ -1,60 +1,40 @@
-// Import express.js
-const express = require("express");
+// 1. Import your models at the top of app.js (assuming you placed them in app/models/)
+const { User } = require('./models/user');
+const { Game } = require('./models/game');
 
-// Create express app
-var app = express();
+// ... [Your existing Express setup, app.set('view engine', 'pug'), etc.] ...
 
-// Set the view engine to pug
-app.set('view engine', 'pug');
-app.set('views', './app/views');
-
-// Add static files location
-app.use(express.static("static"));
-
-// Get the functions in the db.js file to use
-const db = require('./services/db');
-
-// Create a route for root - /
-app.get("/", function(req, res) {
-    // 1. Define the SQL query
-    var sql = 'SELECT * FROM test_table';
-    
-    // 2. Query the database
-    db.query(sql).then(results => {
-        // 3. Render the PUG page and pass the database results to it
-        // We are naming the data "communityMembers" so PUG can use it
-        res.render("index", { communityMembers: results });
-    });
+// 2. Home Page Route (The community landing page)
+app.get('/', function(req, res) {
+    res.render('index');
 });
 
-// Create a route for testing the db
-app.get("/db_test", function(req, res) {
-    // Assumes a table called test_table exists in your database
-    sql = 'select * from test_table';
-    db.query(sql).then(results => {
-        console.log(results);
-        res.send(results)
-    });
+// 3. Games Listing Route (Sharing our community game library)
+app.get('/games', async function(req, res) {
+    try {
+        const gamesData = await Game.getAllGames();
+        // Passes the 'heading' and 'data' variables expected by games-listing.pug
+        res.render('games-listing', { heading: 'Community Game Library', data: gamesData });
+    } catch (err) {
+        console.error("Error fetching games:", err);
+        res.status(500).send("Error loading the community library");
+    }
 });
 
-// Create a route for /goodbye
-// Responds to a 'GET' request
-app.get("/goodbye", function(req, res) {
-    res.send("Goodbye world!");
-});
-
-// Create a dynamic route for /hello/<name>, where name is any value provided by user
-// At the end of the URL
-// Responds to a 'GET' request
-app.get("/hello/:name", function(req, res) {
-    // req.params contains any parameters in the request
-    // We can examine it in the console for debugging purposes
-    console.log(req.params);
-    //  Retrieve the 'name' parameter and use it in a dynamically generated page
-    res.send("Hello " + req.params.name);
-});
-
-// Start server on port 3000
-app.listen(3000,function(){
-    console.log(`Server running at http://127.0.0.1:3000/`);
+// 4. User Profile Route (Building community connections)
+app.get('/profile/:id', async function(req, res) {
+    try {
+        const userId = req.params.id; // Get the ID from the URL
+        const user = new User(userId);
+        
+        // Fetch data using the methods defined in your user.js model
+        await user.getUserDetails();
+        const featuredPosts = await user.getFeaturedPosts();
+        
+        // Passes the 'user' and 'posts' variables expected by user-profile.pug
+        res.render('user-profile', { user: user, posts: featuredPosts });
+    } catch (err) {
+        console.error("Error fetching profile:", err);
+        res.status(500).send("Error loading user profile");
+    }
 });
