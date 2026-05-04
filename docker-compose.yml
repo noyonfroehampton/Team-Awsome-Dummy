@@ -1,4 +1,3 @@
-version: '3.8'
 services:
   web:
     build: .
@@ -6,8 +5,24 @@ services:
       - "3000:3000"
     environment:
       - PORT=3000
+      - DB_HOST=db               # Points to the database container below
+      - DB_USER=root
+      - DB_PASSWORD=awesome_pass
+      - DB_NAME=team_awesome_db
     volumes:
-      # This syncs your local files to the container so you don't 
-      # have to rebuild Docker every time you change a Pug file.
       - .:/usr/src/app
       - /usr/src/app/node_modules
+    depends_on:
+      - db                       # Tells Docker to start the DB before the web server
+
+  db:
+    image: mysql:8.0
+    ports:
+      - "3306:3306"
+    environment:
+      - MYSQL_ROOT_PASSWORD=awesome_pass
+      - MYSQL_DATABASE=team_awesome_db
+    volumes:
+      # This is Docker magic: Any .sql file put in this folder 
+      # runs automatically when the database is created.
+      - ./sd2-db.sql:/docker-entrypoint-initdb.d/init.sql
