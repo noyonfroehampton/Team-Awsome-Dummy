@@ -180,3 +180,11 @@ body {
     color: var(--bg-white);
     border-color: var(--primary-blue);
 }
+
+/* Forces the categories page to span full width and stack by rows */
+.categories-layout {
+    grid-column: 1 / -1; 
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}

@@ -5,7 +5,7 @@ services:
       - "3000:3000"
     environment:
       - PORT=3000
-      - DB_HOST=db               # Points to the database container below
+      - DB_HOST=db
       - DB_USER=root
       - DB_PASSWORD=awesome_pass
       - DB_NAME=team_awesome_db
@@ -13,7 +13,7 @@ services:
       - .:/usr/src/app
       - /usr/src/app/node_modules
     depends_on:
-      - db                       # Tells Docker to start the DB before the web server
+      - db
 
   db:
     image: mysql:8.0
@@ -23,6 +23,15 @@ services:
       - MYSQL_ROOT_PASSWORD=awesome_pass
       - MYSQL_DATABASE=team_awesome_db
     volumes:
-      # This is Docker magic: Any .sql file put in this folder 
-      # runs automatically when the database is created.
       - ./sd2-db.sql:/docker-entrypoint-initdb.d/init.sql
+
+  # --- NEW PHPMYADMIN BLOCK ---
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    ports:
+      - "8080:80" # Maps port 8080 on your local machine to phpMyAdmin
+    environment:
+      - PMA_HOST=db # Tells phpMyAdmin to look for the container named 'db'
+      - MYSQL_ROOT_PASSWORD=awesome_pass
+    depends_on:
+      - db
