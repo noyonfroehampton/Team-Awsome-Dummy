@@ -1,20 +1,18 @@
-# Base image to use
-FROM node:latest
+# Use a lightweight Node.js image
+FROM node:18-alpine
 
-# set a working directory
-WORKDIR /src
+# Set the working directory inside the container
+WORKDIR /usr/src/app
 
-# Copy across project configuration information
-# Install application dependencies
-COPY package*.json /src/
+# Copy package.json and install dependencies first (optimizes Docker caching)
+COPY package*.json ./
+RUN npm install
 
-# Ask npm to install the dependencies
-RUN npm install -g supervisor && npm install && npm install supervisor
+# Copy the rest of your application files
+COPY . .
 
-# Copy across all our files
-COPY . /src
-
-# Expose our application port (3000)
+# Expose the port your app runs on
 EXPOSE 3000
 
-
+# Start the application
+CMD ["npm", "start"]

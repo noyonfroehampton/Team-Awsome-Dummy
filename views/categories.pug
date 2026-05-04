@@ -1,0 +1,26 @@
+extends layout
+
+block content
+  //- The top browse header from your wireframe
+  div.browse-header.box
+    span.browse-title Browse Games:
+    div.browse-filters
+      a(href="#") All Games
+      a(href="#") Alpha ▼
+      a(href="#") Category ▼
+
+  //- Platforms Section
+  section.box
+    h2 Platforms
+    div.tag-grid
+      //- This loop dynamically creates a button for every platform in the DB
+      each platform in platforms
+        a.tag-button(href=`/platforms/${platform.id}`)= platform.name
+
+  //- Tags Section
+  section.box
+    h2 Tags
+    div.tag-grid
+      //- This loop dynamically creates a button for every tag in the DB
+      each tag in tags
+        a.tag-button(href=`/tags/${tag.id}`)= tag.name

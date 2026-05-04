@@ -1,0 +1,182 @@
+/* Basic reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f6f9;
+    color: #333;
+}
+
+/* Color Palette */
+:root {
+    --primary-blue: #0056b3;
+    --accent-orange: #fd7e14;
+    --bg-white: #ffffff;
+    --border-color: #cdd4db;
+}
+
+/* ... existing reset, body, and variables ... */
+
+.site-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: var(--primary-blue);
+    color: var(--bg-white);
+    padding: 1rem 2rem;
+    border-bottom: 5px solid var(--accent-orange);
+}
+
+/* NEW: Groups logo and search side-by-side */
+.header-left {
+    display: flex;
+    align-items: center;
+    gap: 2rem; 
+}
+
+.logo {
+    font-size: 1.5rem;
+    font-weight: bold;
+    white-space: nowrap;
+}
+
+/* NEW: Search bar styling */
+.search-bar input {
+    padding: 0.5rem 1rem;
+    border: none;
+    border-radius: 20px; /* Gives it a modern pill shape */
+    outline: none;
+    width: 250px;
+    font-size: 0.95rem;
+}
+
+.search-bar input:focus {
+    box-shadow: 0 0 0 2px var(--accent-orange);
+}
+
+/* ... keep your existing nav-links, profile-link, and grid styles below ... */
+
+.logo {
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+
+.nav-links {
+    display: flex;
+    gap: 2rem;
+}
+
+.nav-links a {
+    color: var(--bg-white);
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.nav-links a:hover {
+    color: var(--accent-orange);
+}
+
+.profile-link .circle {
+    width: 40px;
+    height: 40px;
+    background-color: var(--bg-white);
+    border: 3px solid var(--accent-orange);
+    border-radius: 50%;
+    display: block;
+}
+
+/* Main Layout Grid */
+.container {
+    max-width: 1400px;
+    margin: 2rem auto;
+    padding: 0 1rem;
+    display: grid;
+    /* 3 Columns: Left Sidebar, Main Content, Right Space */
+    grid-template-columns: 300px 1fr 250px; 
+    gap: 1.5rem;
+}
+
+/* Box Styles */
+.box {
+    background-color: var(--bg-white);
+    border: 2px solid var(--border-color);
+    padding: 1.5rem;
+    min-height: 200px;
+}
+
+.box h2 {
+    color: var(--primary-blue);
+    font-size: 1.2rem;
+    margin-bottom: 1rem;
+    border-bottom: 2px solid var(--accent-orange);
+    padding-bottom: 0.5rem;
+    display: inline-block;
+}
+
+.center-column {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+/* Browse Header Styling */
+.browse-header {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 3rem;
+    margin-bottom: 1.5rem;
+    min-height: auto;
+    padding: 1rem 1.5rem;
+    background-color: #e9ecef;
+}
+
+.browse-title {
+    font-weight: bold;
+    font-size: 1.1rem;
+}
+
+.browse-filters {
+    display: flex;
+    gap: 2rem;
+}
+
+.browse-filters a {
+    color: #333;
+    text-decoration: none;
+}
+
+.browse-filters a:hover {
+    color: var(--primary-blue);
+}
+
+/* Tag and Platform Grid */
+.tag-grid {
+    display: grid;
+    /* Forces a 2-column layout matching the wireframe */
+    grid-template-columns: 1fr 1fr; 
+    gap: 1rem;
+    margin-top: 1rem;
+}
+
+.tag-button {
+    display: block;
+    background-color: #f8f9fa;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    padding: 0.75rem 1rem;
+    text-align: center;
+    text-decoration: none;
+    color: #333;
+    transition: all 0.2s;
+}
+
+.tag-button:hover {
+    background-color: var(--primary-blue);
+    color: var(--bg-white);
+    border-color: var(--primary-blue);
+}
