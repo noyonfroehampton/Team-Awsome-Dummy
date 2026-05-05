@@ -1,10 +1,24 @@
 const mysql = require('mysql2');
+require('dotenv').config();
 
-const connection = mysql.createConnection({
+const pool = mysql.createPool({
   host: process.env.DB_HOST || 'db',
   user: process.env.DB_USER || 'root',
-  password: process.env.DB_PASSWORD,
-  database: process.env.DB_DATABASE
+  password: process.env.DB_PASSWORD || 'secretpassword',
+  database: process.env.DB_DATABASE || 'team_awesome',
+  waitForConnections: true,
+  connectionLimit: 10,
+  queueLimit: 0
 });
 
-module.exports = connection;
+// This helps debug the connection in your Docker logs
+pool.getConnection((err, connection) => {
+  if (err) {
+    console.error('Database connection failed:', err.message);
+  } else {
+    console.log('Connected to the MySQL database.');
+    connection.release();
+  }
+});
+
+module.exports = pool.promise();

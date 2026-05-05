@@ -6,22 +6,19 @@ services:
       MYSQL_ROOT_PASSWORD: secretpassword
       MYSQL_DATABASE: team_awesome
     volumes:
-      - ./sd2-db.sql:/docker-entrypoint-initdb.d/sd2-db.sql # Initializes your DB
+      - db_data:/var/lib/mysql
+      - ./sd2-db.sql:/docker-entrypoint-initdb.d/sd2-db.sql
 
   web:
     build: .
     ports:
       - "3000:3000"
-    environment:
-      - DB_HOST=db
-      - DB_USER=root
-      - DB_PASSWORD=secretpassword
-      - DB_DATABASE=team_awesome
-    volumes:
-      - .:/usr/src/app
-      - /usr/src/app/node_modules # Critical: prevents host from overwriting container modules
+    env_file: .env
     depends_on:
       - db
+    volumes:
+      - .:/usr/src/app
+      - /usr/src/app/node_modules # Important: protects container dependencies
 
   phpmyadmin:
     image: phpmyadmin:latest
@@ -31,3 +28,6 @@ services:
       PMA_HOST: db
     depends_on:
       - db
+
+volumes:
+  db_data:
