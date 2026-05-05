@@ -85,6 +85,17 @@ CREATE TABLE comments (
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 );
 
+-- Create Replies Table
+CREATE TABLE IF NOT EXISTS replies (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    comment_id INT NOT NULL,
+    user_id INT NOT NULL,
+    reply_text TEXT NOT NULL,
+    reply_timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (comment_id) REFERENCES comments(id) ON DELETE CASCADE,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+);
+
 -- Insert Platform Data
 INSERT INTO platforms (name) VALUES
     ('Windows'),
@@ -293,3 +304,11 @@ INSERT INTO comments (post_id, user_id, comment_text, comment_timestamp) VALUES
 (1, 3, 'Thanks for sharing your thoughts!', CURRENT_TIMESTAMP),
 (2, 1, 'I agree, this game is fantastic!', CURRENT_TIMESTAMP),
 (3, 4, 'These tips are really helpful, thanks!', CURRENT_TIMESTAMP);
+
+-- Insert dummy data for testing
+INSERT INTO replies (comment_id, user_id, reply_text) VALUES 
+(1, 1, 'Thanks, Bob! Glad you liked it.'),
+(1, 4, 'I agree with Bob, very well written.');
+
+-- Change this in your sd2-db.sql or run this command:
+ALTER TABLE posts MODIFY total_rating DECIMAL(3,1) DEFAULT 0.0;

@@ -22,17 +22,36 @@ block content
                 .metadata
                   if game.metacritic_score
                     span.score-badge= game.metacritic_score
-                  p: strong Tags: #{game.tags || 'N/A'}
-                  p: strong Platforms: #{game.platforms || 'N/A'}
+                  p: strong Tags: 
+                  span= game.tags || 'N/A'
+                  p: strong Platforms: 
+                  span= game.platforms || 'N/A'
         else
           p No games found.
 
-    //- Right Column: Sidebars
+    //- Right Column: Trending and Top Posts
     .right-column
-      .sidebar-box
-        h2 Trending Guides & Tips
-        .placeholder-content Based on likes and feedback...
-      
-      .sidebar-box
-        h2 Top Guides and Tips
-        .placeholder-content Community favorites here...
+      .homepage-posts-section
+        .trending-posts
+          h2 Trending Posts (Last 24 Hours)
+          if trendingPosts && trendingPosts.length > 0
+            ul.post-list
+              each post in trendingPosts
+                li.post-item
+                  .post-info
+                    a(href=`/post/${post.id}`).post-link= post.title
+                    p.post-meta by #{post.username} | Rating: #{post.total_rating}
+          else
+            p.no-data No trending posts in the last 24 hours.
+
+        .top-posts
+          h2 Top 10 Posts of All Time
+          if topPosts && topPosts.length > 0
+            ul.post-list
+              each post in topPosts
+                li.post-item
+                  .post-info
+                    a(href=`/post/${post.id}`).post-link= post.title
+                    p.post-meta by #{post.username} | Rating: #{post.total_rating}
+          else
+            p.no-data No top posts available.

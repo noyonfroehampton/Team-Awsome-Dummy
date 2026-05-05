@@ -519,3 +519,159 @@ body {
     text-align: center;
     padding: 20px 0;
 }
+
+/* Add to static/css/styles.css */
+
+.posts-container {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    padding: 20px;
+    /* Assumes your layout.pug already has the outermost container styled */
+}
+
+.post-card {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    border: 3px solid black; /* Matches the thick border in the wireframe */
+    padding: 15px;
+    background-color: white;
+}
+
+.post-card-left {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.post-title {
+    margin: 0;
+    font-size: 1.2rem;
+    font-weight: bold;
+}
+
+.post-username {
+    margin: 0;
+    font-size: 0.9rem;
+    color: #555;
+}
+
+.post-card-right {
+    display: flex;
+}
+
+.post-meta-box {
+    border: 2px solid black; /* Matches the inner border around the meta data */
+    padding: 5px 10px;
+    font-size: 0.9rem;
+    display: flex;
+    gap: 5px;
+}
+
+.main-homepage-layout {
+    display: flex;
+    gap: 30px;
+    padding: 20px;
+}
+
+.left-column {
+    flex: 2; /* Takes up more space for games */
+}
+
+.right-column {
+    flex: 1; /* Sidebar for posts */
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+}
+
+.post-list {
+    list-style: none;
+    padding: 0;
+}
+
+.post-item {
+    margin-bottom: 15px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #ddd;
+}
+
+.comment-block {
+    margin-bottom: 20px;
+    padding: 10px;
+    border-left: 3px solid #333;
+    background-color: #fcfcfc;
+}
+
+.replies-list {
+    margin-left: 40px; /* Indent replies */
+    margin-top: 10px;
+    border-left: 2px solid #ccc;
+    padding-left: 15px;
+}
+
+.reply-item {
+    margin-bottom: 10px;
+    font-size: 0.9rem;
+    background-color: #f0f0f0;
+    padding: 8px;
+    border-radius: 4px;
+}
+
+.timestamp {
+    font-size: 0.75rem;
+    color: #888;
+}
+
+.post-page-layout {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.post-header-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 20px;
+}
+
+.title-box {
+    border: 3px solid black;
+    padding: 10px 20px;
+    flex-grow: 0;
+}
+
+.meta-stack {
+    text-align: right;
+    line-height: 1.2;
+}
+
+.description-box {
+    border: 3px solid black;
+    padding: 20px;
+    min-height: 200px;
+    margin-bottom: 10px;
+}
+
+.rating-row {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 20px;
+}
+
+.rating-box {
+    border: 3px solid black;
+    padding: 5px 15px;
+}
+
+.comments-container {
+    border: 3px solid black;
+    padding: 20px;
+}
+
+.author-nickname {
+    font-size: 1.1rem;
+    margin-bottom: 5px;
+}

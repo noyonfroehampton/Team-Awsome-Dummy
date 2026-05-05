@@ -1,52 +1,50 @@
 extends layout
 
 block content
-  .single-post-container
-    .post-main-box
-      //- Top Section: Nickname
-      p.post-author Nickname: #{post.nickname}
-      
-      .post-header-flex
-        //- Left side: Title
-        .post-title-box
-          h2= post.title
-        
-        //- Right side: Meta info
-        .post-meta-box
-          p Post flair: #{post.Flair_Name ? post.Flair_Name : 'None'}
-          if post.game
-            p Game: #{post.game}
-          if post.platform
-            p Platform: #{post.platform}
-          p Date posted: #{new Date(post.post_timestamp).toLocaleDateString()}
+  .post-page-layout
+    //- Nickname at the top[cite: 5]
+    p.author-nickname= post.nickname
 
-      //- Middle Section: Description
-      .post-description-box
-        h4 Post description:
-        p.description-text= post.description
-        
-        //- Bottom Right of Description: Rating
-        .post-rating-box
-          span Total Rating: #{post.total_rating}
+    .post-header-row
+      //- Boxed Post Title[cite: 5]
+      .title-box
+        h1= post.title
 
-      //- Bottom Section: Comments
-      .post-comments-box
-        h4 Comments
-        
-        //- Check if the array has any comments in it
-        if comments.length > 0
-          
-          //- Loop through each comment in the array
-          each comment in comments
-            .comment-item
-              .comment-header
-                //- Display the commenter's nickname and the formatted date
-                strong.comment-author= comment.nickname
-                span.comment-date= new Date(comment.comment_timestamp).toLocaleString()
-              
-              //- Display the actual comment text
-              p.comment-text= comment.comment_text
-              
-        //- If the array is empty, show this instead
-        else
-          p.no-comments This post has no comments yet. Be the first to reply!
+      //- Vertical Meta Stack: Flair, Game, Platform, Date[cite: 5]
+      .meta-stack
+        p= post.Flair_Name || 'General'
+        p= post.game_name
+        p= post.platform_name
+        p= post.post_timestamp
+
+    //- Boxed Description[cite: 5]
+    .description-box
+      p Post description:
+      p.description-text= post.description
+
+    //- Rating Bar[cite: 5]
+    .rating-row
+      .rating-box
+        span Total Rating: #{post.total_rating}
+
+    //- Comments Section[cite: 5]
+    .comments-container
+      h3 Comments
+      if comments && comments.length > 0
+        each comment in comments
+          .comment-block
+            .comment-content
+              strong= comment.nickname
+              span.timestamp  (#{comment.comment_timestamp})
+              p= comment.comment_text
+            
+            //- Nested Replies Section[cite: 3, 6]
+            .replies-list
+              each reply in replies
+                if reply.comment_id == comment.id
+                  .reply-item
+                    strong= reply.nickname
+                    span.timestamp  (#{reply.reply_timestamp})
+                    p= reply.reply_text
+      else
+        p No comments yet.

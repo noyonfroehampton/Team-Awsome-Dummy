@@ -13,8 +13,10 @@ app.use(express.static(path.join(__dirname, 'static')));
 // --- ROUTES ---
 
 // 1. Home Page
+// Replace your existing 1. Home Page route in index.js with this:
 app.get('/', async (req, res) => {
-  const sql = `
+  // Existing query for top games
+  const gamesSql = `
     SELECT 
       g.id, g.title, g.description, g.release_year, g.metacritic_score,
       GROUP_CONCAT(DISTINCT t.name SEPARATOR ', ') AS tags,
@@ -28,10 +30,43 @@ app.get('/', async (req, res) => {
     ORDER BY g.metacritic_score DESC
     LIMIT 10`;
 
+  // Query for Top 3 Trending Posts in the last 24 hours
+  const trendingPostsSql = `
+    SELECT p.id, p.title, p.total_rating, u.nickname AS username
+    FROM posts p
+    JOIN users u ON p.user_id = u.id
+    WHERE p.post_timestamp >= NOW() - INTERVAL 1 DAY
+    ORDER BY p.total_rating DESC
+    LIMIT 3
+  `;
+
+  // Query for Top 10 Most Rated Posts of all time
+  const topPostsSql = `
+    SELECT p.id, p.title, p.total_rating, u.nickname AS username
+    FROM posts p
+    JOIN users u ON p.user_id = u.id
+    ORDER BY p.total_rating DESC
+    LIMIT 10
+  `;
+
   try {
-    const [topGames] = await db.query(sql);
-    // Passing topGames to the index template
-    res.render('index', { topGames });
+    // Execute all queries concurrently for better performance
+    const [
+      [topGames],
+      [trendingPosts],
+      [topPosts]
+    ] = await Promise.all([
+      db.query(gamesSql),
+      db.query(trendingPostsSql),
+      db.query(topPostsSql)
+    ]);
+
+    // Pass all three datasets to the index template
+    res.render('index', { 
+      topGames, 
+      trendingPosts, 
+      topPosts 
+    });
   } catch (err) {
     console.error("Home page error:", err);
     res.status(500).send("Database Error");
@@ -138,27 +173,30 @@ app.get('/user/:id', async (req, res) => {
     }
 });
 
-// Add this route to your app.js
 app.get('/post/:id', async (req, res) => {
     const postId = req.params.id;
 
     try {
-        // 1. Fetch Post Data (Joining users for nickname and flairs for flair name)
+        // 1. Fetch Post Data[cite: 4]
         const postQuery = `
-            SELECT p.*, u.nickname, f.Flair_Name 
-            FROM posts p
-            JOIN users u ON p.user_id = u.id
-            LEFT JOIN flairs f ON p.flair_id = f.id
-            WHERE p.id = ?
+        SELECT 
+            p.*, 
+            u.nickname, 
+            f.Flair_Name, 
+            g.title AS game_name, 
+            pl.name AS platform_name
+        FROM posts p
+        JOIN users u ON p.user_id = u.id
+        LEFT JOIN flairs f ON p.flair_id = f.id
+        LEFT JOIN games g ON p.game = g.id
+        LEFT JOIN platforms pl ON p.platform = pl.id
+        WHERE p.id = ?
         `;
         const [postResult] = await db.query(postQuery, [postId]);
-        
-        if (postResult.length === 0) {
-            return res.status(404).send('Post not found');
-        }
+        if (postResult.length === 0) return res.status(404).send('Post not found');
         const post = postResult[0];
 
-        // 2. Fetch Comments for this post (Joining users to get the commenter's nickname)
+        // 2. Fetch Comments[cite: 4]
         const commentsQuery = `
             SELECT c.*, u.nickname 
             FROM comments c
@@ -168,15 +206,57 @@ app.get('/post/:id', async (req, res) => {
         `;
         const [comments] = await db.query(commentsQuery, [postId]);
 
-        // 3. Render the Pug template
+        // 3. Fetch Replies for all comments on this post[cite: 3]
+        const repliesQuery = `
+            SELECT r.*, u.nickname 
+            FROM replies r
+            JOIN users u ON r.user_id = u.id
+            JOIN comments c ON r.comment_id = c.id
+            WHERE c.post_id = ?
+            ORDER BY r.reply_timestamp ASC
+        `;
+        const [replies] = await db.query(repliesQuery, [postId]);
+
+        // 4. Render template with posts, comments, and replies
         res.render('post', { 
             title: post.title, 
             post: post, 
-            comments: comments 
+            comments: comments,
+            replies: replies 
         });
 
     } catch (error) {
         console.error("Database error:", error);
+        res.status(500).send("Internal Server Error");
+    }
+});
+
+// Replace the dummy app.get('/posts', ...) with this:
+app.get('/posts', async (req, res) => {
+    try {
+        // Querying posts, joining users for the nickname, and flairs for the flair name[cite: 3]
+        const query = `
+            SELECT 
+                p.title,
+                u.nickname AS username,
+                DATE_FORMAT(p.post_timestamp, '%Y-%m-%d') AS date,
+                f.Flair_Name AS flair,
+                p.game,
+                p.platform
+            FROM posts p
+            JOIN users u ON p.user_id = u.id
+            LEFT JOIN flairs f ON p.flair_id = f.id
+            ORDER BY p.post_timestamp DESC;
+        `;
+        
+        const [posts] = await db.query(query);
+
+        res.render('posts', { 
+            title: 'Post List', 
+            posts: posts 
+        });
+    } catch (error) {
+        console.error("Error fetching posts:", error);
         res.status(500).send("Internal Server Error");
     }
 });
