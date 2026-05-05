@@ -1,15 +1,38 @@
 extends layout
 
 block content
-  .grid-wrapper
-    section.sidebar-left
-      h2 Top Games of all time
-      p Content for top games goes here.
+  .main-homepage-layout
+    //- Left Column: Top Games List
+    .left-column
+      h1.section-title Top 10 Games
+      p.subtitle Ranked by Metacritic Score
+      
+      .games-list
+        if topGames && topGames.length > 0
+          each game, index in topGames
+            .game-card
+              .card-rank
+                span= "#" + (index + 1)
+              .card-left
+                .cover-placeholder: span Cover
+              .card-mid
+                h2: a(href='/game/' + game.id)= game.title
+                p.description= game.description
+              .card-right
+                .metadata
+                  if game.metacritic_score
+                    span.score-badge= game.metacritic_score
+                  p: strong Tags: #{game.tags || 'N/A'}
+                  p: strong Platforms: #{game.platforms || 'N/A'}
+        else
+          p No games found.
 
-    section.content-middle
-      .box-trending
-        h2 Trending guides and tips
-        p Based on likes and feedback.
-      .box-top-guides
+    //- Right Column: Sidebars
+    .right-column
+      .sidebar-box
+        h2 Trending Guides & Tips
+        .placeholder-content Based on likes and feedback...
+      
+      .sidebar-box
         h2 Top Guides and Tips
-        p General top tips and tricks.
+        .placeholder-content Community favorites here...

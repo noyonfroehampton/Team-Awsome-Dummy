@@ -1,0 +1,32 @@
+extends layout
+
+block content
+  .listing-container
+    h1 All Games
+    each game in games
+      .game-card
+        .card-left
+          .cover-placeholder 
+            //- Placeholder for cover photo
+            span Game Cover Photo
+        
+        .card-mid
+          h2
+            a(href='/game/' + game.id)= game.title
+          p.description= game.description
+        
+        .card-right
+          .metadata
+            if game.metacritic_score
+              p 
+                strong Metacritic Score: 
+                span= game.metacritic_score
+            p 
+              strong Tags: 
+              | #{game.tags || 'N/A'}
+            p 
+              strong Platforms: 
+              | #{game.platforms || 'N/A'}
+            p 
+              strong Release Date: 
+              | #{game.release_year}

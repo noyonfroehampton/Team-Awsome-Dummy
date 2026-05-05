@@ -1,0 +1,32 @@
+extends layout
+
+block content
+  .game-container
+    h1= game.title
+    
+    .game-main-info
+      //- Placeholder for Game Cover Photo
+      .cover-photo-placeholder
+        if game.cover_url
+          img(src=game.cover_url, alt=game.title)
+        else
+          .no-image Game Cover Photo Placeholder
+      
+      .game-metadata
+        if game.metacritic_score
+            p 
+                strong Metacritic Score: 
+                span= game.metacritic_score
+        p 
+          strong Tags: 
+          span= game.tags || 'None'
+        p 
+          strong Platforms: 
+          span= game.platforms || 'None'
+        p 
+          strong Release Year: 
+          span= game.release_year
+
+    .game-description
+      h2 Description
+      p= game.description
