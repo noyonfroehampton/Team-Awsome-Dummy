@@ -2,49 +2,48 @@ extends layout
 
 block content
   .post-page-layout
-    //- Nickname at the top[cite: 5]
-    p.author-nickname= post.nickname
+    //- Nickname tag
+    .author-nickname= post.nickname
 
     .post-header-row
-      //- Boxed Post Title[cite: 5]
       .title-box
         h1= post.title
 
-      //- Vertical Meta Stack: Flair, Game, Platform, Date[cite: 5]
       .meta-stack
-        p= post.Flair_Name || 'General'
-        p= post.game_name
-        p= post.platform_name
-        p= post.post_timestamp
+        p 🏷️ #{post.Flair_Name || 'General'}
+        p 🎮 #{post.game_name}
+        p 💻 #{post.platform_name}
+        //- Removes everything after 'GMT'[cite: 4]
+        p 📅 #{post.post_timestamp.toString().split(' GMT')[0]}
 
-    //- Boxed Description[cite: 5]
     .description-box
-      p Post description:
+      h4 Post description:
       p.description-text= post.description
 
-    //- Rating Bar[cite: 5]
     .rating-row
       .rating-box
-        span Total Rating: #{post.total_rating}
+        strong Total Rating: 
+        span= post.total_rating
 
-    //- Comments Section[cite: 5]
     .comments-container
-      h3 Comments
+      h3 Community Discussion
+      hr
       if comments && comments.length > 0
         each comment in comments
           .comment-block
             .comment-content
               strong= comment.nickname
-              span.timestamp  (#{comment.comment_timestamp})
+              //- Applied cleanup to comment timestamps as well[cite: 4]
+              span.timestamp  — #{comment.comment_timestamp.toString().split(' GMT')[0]}
               p= comment.comment_text
             
-            //- Nested Replies Section[cite: 3, 6]
-            .replies-list
-              each reply in replies
-                if reply.comment_id == comment.id
-                  .reply-item
-                    strong= reply.nickname
-                    span.timestamp  (#{reply.reply_timestamp})
-                    p= reply.reply_text
+            if replies && replies.some(r => r.comment_id == comment.id)
+              .replies-list
+                each reply in replies
+                  if reply.comment_id == comment.id
+                    .reply-item
+                      strong= reply.nickname
+                      span.timestamp  — #{reply.reply_timestamp.toString().split(' GMT')[0]}
+                      p= reply.reply_text
       else
-        p No comments yet.
+        p.no-comments No thoughts yet. Be the first to comment!

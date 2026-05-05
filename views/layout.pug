@@ -2,17 +2,19 @@ doctype html
 html
   head
     title Gamespace
-    //- Ensure this stylesheet is loaded to apply the CSS below
     link(rel="stylesheet", href="/css/styles.css")
   body
     header.banner
       .logo-container
-        //- Corrected src path
-        img(src="/images/logo.png", alt="Gamespace Logo")
+        //- Wrap the image in a link pointing to the root route[cite: 7, 12]
+        a(href="/")
+          img(src="/images/logo.png", alt="Gamespace Logo")
+      
       nav.nav-links
         a(href="/categories") Categories
         a(href="/games") Games List
         a(href="/posts") Posts
+      
       .profile-icon
         .circle
 

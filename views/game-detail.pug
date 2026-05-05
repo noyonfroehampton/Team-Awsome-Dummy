@@ -5,12 +5,14 @@ block content
     h1= game.title
     
     .game-main-info
-      //- Placeholder for Game Cover Photo
       .cover-photo-placeholder
-        if game.cover_url
-          img(src=game.cover_url, alt=game.title)
-        else
-          .no-image Game Cover Photo Placeholder
+        //- Just use the image directly; the placeholder container handles the border and size
+        img(
+          src=`/images/covers/${game.id}.jpg`, 
+          alt=game.title, 
+          class="game-cover-detail", 
+          onerror="this.src='/images/default-cover.png'"
+        )
       
       .game-metadata
         if game.metacritic_score

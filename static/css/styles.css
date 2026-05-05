@@ -264,6 +264,7 @@ body {
   gap: 40px;
 }
 
+/* Update the existing detail page placeholder */
 .cover-photo-placeholder {
   flex: 0 0 300px;
   height: 400px;
@@ -272,7 +273,15 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  font-weight: bold;
+  overflow: hidden; /* Keeps the image inside the borders */
+}
+
+/* Specific styling for the detail page image */
+.game-cover-detail {
+  width: 100%;
+  height: 100%;
+  object-fit: cover; /* This ensures the image fills the 300x400 area perfectly */
+  display: block;
 }
 
 .game-metadata {
@@ -702,4 +711,171 @@ body {
 .nav-links a {
   color: white;
   text-decoration: none;
+}
+
+/* Styling for the new game covers */
+.cover-container {
+  width: 120px;
+  height: 160px;
+  overflow: hidden;
+  border-radius: 4px;
+  background-color: #222; /* Fallback if image is missing */
+}
+
+.game-cover-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover; /* Keeps the aspect ratio dead on */
+  display: block;
+}
+
+/* Styling for the Author Tag */
+.author-nickname {
+  display: inline-block;
+  background: var(--primary-blue);
+  color: white;
+  padding: 5px 15px;
+  border-radius: 4px;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+/* Stylized Meta Stack for Post Detail */
+.meta-stack p {
+  margin: 5px 0;
+  font-size: 0.9rem;
+  color: #444;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+.meta-stack p::before {
+  content: '•';
+  color: var(--accent-orange);
+  margin-right: 8px;
+  font-weight: bold;
+}
+
+/* Cleaner Comment Nesting */
+.comment-block {
+  border: 2px solid black;
+  margin-bottom: 15px;
+  background: #fff;
+}
+
+.comment-content {
+  padding: 10px 15px;
+}
+
+.replies-list {
+  margin: 0 15px 10px 30px; /* Indent and space from bottom */
+}
+
+.reply-item {
+  border: 1px solid #ccc;
+  border-left: 4px solid var(--accent-orange);
+  padding: 8px 12px;
+  margin-top: 5px;
+  background: #f9f9f9;
+}
+
+/* Ensure the logo link doesn't add unwanted decoration[cite: 14] */
+.logo-container a {
+  text-decoration: none;
+  display: block; /* Makes the entire area clickable */
+  line-height: 0; /* Prevents tiny gaps below the image */
+}
+
+.logo-container img {
+  height: 50px; 
+  width: auto;
+  display: block;
+}
+
+/* --- Adjusting Posts to match Games --- */
+
+.post-card {
+  display: flex; /* Ensures the 3-column layout */
+  background: white;
+  border: 2px solid #000;
+  margin-bottom: 20px;
+  min-height: 150px; /* Slightly shorter than game cards */
+  overflow: hidden;
+}
+
+/* Force columns to match game card widths */
+.post-card .card-left {
+  flex: 0 0 160px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #f0f0f0;
+  border-right: 1px solid #eee;
+}
+
+.post-card .card-mid {
+  flex: 1;
+  padding: 15px;
+}
+
+.post-card .card-right {
+  flex: 0 0 280px;
+  padding: 15px;
+  border-left: 1px solid #eee;
+  background: #fafafa;
+  text-align: right;
+  display: flex;
+  flex-direction: column;
+  justify-content: center; /* Centers meta text vertically */
+}
+
+/* Stylized Initial for the Author */
+.circle-avatar {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    border: 2px solid var(--primary-blue);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    font-weight: bold;
+    background-color: white;
+    color: var(--primary-blue);
+}
+
+/* --- Narrowing the Title Block --- */
+
+.post-header-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 30px; /* Space between title and meta info */
+    margin-bottom: 20px;
+}
+
+.title-box {
+    border: 3px solid black;
+    padding: 10px 20px;
+    flex: 0 1 30%; /* Narrowed from 40% to 30% */
+    min-width: 250px; /* Ensures it doesn't get too squished on mobile */
+    background-color: white;
+}
+
+.meta-stack {
+    text-align: right;
+    line-height: 1.4;
+    flex: 1; /* Allows meta info to take up the remaining space */
+}
+
+/* Cleanup for the author nickname tag */
+.author-nickname {
+  display: inline-block;
+  background: #003366; 
+  color: white;
+  padding: 5px 15px;
+  border-radius: 4px;
+  font-weight: bold;
+  margin-bottom: 10px;
 }
