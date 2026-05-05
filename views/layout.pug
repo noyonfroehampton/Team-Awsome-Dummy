@@ -2,11 +2,13 @@ doctype html
 html
   head
     title Gamespace
+    //- Ensure this stylesheet is loaded to apply the CSS below
     link(rel="stylesheet", href="/css/styles.css")
   body
     header.banner
       .logo-container
-        img(src="/images/logo.png", alt="Gamespace Logo", class="logo-placeholder")
+        //- Corrected src path
+        img(src="/images/logo.png", alt="Gamespace Logo")
       nav.nav-links
         a(href="/categories") Categories
         a(href="/games") Games List

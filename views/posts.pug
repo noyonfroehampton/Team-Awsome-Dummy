@@ -6,12 +6,14 @@ block content
       each post in posts
         .post-card
           .post-card-left
-            h2.post-title= post.title
+            // Clicking the title now takes you to the specific post
+            h2.post-title
+              a(href='/post/' + post.id)= post.title
             p.post-username= post.username
           .post-card-right
             .post-meta-box
-              // Filter out null/empty values and join them with a comma
-              - var metaInfo = [post.date, post.flair, post.game, post.platform].filter(Boolean).join(', ')
+              // Updated to use names instead of raw IDs
+              - var metaInfo = [post.date, post.flair, post.game_name, post.platform_name].filter(Boolean).join(', ')
               span= metaInfo
     else
       p No posts available.

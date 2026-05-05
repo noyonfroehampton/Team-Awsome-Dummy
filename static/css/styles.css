@@ -675,3 +675,31 @@ body {
     font-size: 1.1rem;
     margin-bottom: 5px;
 }
+
+/* Ensure the banner is a flex container for horizontal alignment */
+.banner {
+  background-color: #003366; /* Match your banner color */
+  color: white;
+  padding: 10px 20px;
+  display: flex;
+  justify-content: space-between; /* Pushes logo, nav, and profile apart */
+  align-items: center; /* Vertically centers everything */
+}
+
+/* Constrain the logo image height */
+.logo-container img {
+  height: 50px; /* Adjust this value to your liking */
+  width: auto; /* Maintains aspect ratio */
+  display: block;
+}
+
+/* Ensure navigation links display horizontally */
+.nav-links {
+  display: flex;
+  gap: 20px; /* Space between links */
+}
+
+.nav-links a {
+  color: white;
+  text-decoration: none;
+}

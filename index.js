@@ -232,20 +232,23 @@ app.get('/post/:id', async (req, res) => {
 });
 
 // Replace the dummy app.get('/posts', ...) with this:
+// Updated Route in index.js
 app.get('/posts', async (req, res) => {
     try {
-        // Querying posts, joining users for the nickname, and flairs for the flair name[cite: 3]
         const query = `
             SELECT 
+                p.id,
                 p.title,
                 u.nickname AS username,
                 DATE_FORMAT(p.post_timestamp, '%Y-%m-%d') AS date,
                 f.Flair_Name AS flair,
-                p.game,
-                p.platform
+                g.title AS game_name,
+                pl.name AS platform_name
             FROM posts p
             JOIN users u ON p.user_id = u.id
             LEFT JOIN flairs f ON p.flair_id = f.id
+            LEFT JOIN games g ON p.game = g.id
+            LEFT JOIN platforms pl ON p.platform = pl.id
             ORDER BY p.post_timestamp DESC;
         `;
         
@@ -261,6 +264,58 @@ app.get('/posts', async (req, res) => {
     }
 });
 
+
+// Route to show games filtered by a specific tag
+app.get('/tags/:id', async (req, res) => {
+  const tagId = req.params.id;
+  const sql = `
+    SELECT 
+      g.id, g.title, g.description, g.release_year, g.metacritic_score,
+      GROUP_CONCAT(DISTINCT t.name SEPARATOR ', ') AS tags,
+      GROUP_CONCAT(DISTINCT p.name SEPARATOR ', ') AS platforms
+    FROM games g
+    JOIN game_tags gt_filter ON g.id = gt_filter.game_id
+    LEFT JOIN game_tags gt ON g.id = gt.game_id
+    LEFT JOIN tags t ON gt.tag_id = t.id
+    LEFT JOIN game_platforms gp ON g.id = gp.game_id
+    LEFT JOIN platforms p ON gp.platform_id = p.id
+    WHERE gt_filter.tag_id = ?
+    GROUP BY g.id`;
+
+  try {
+    const [rows] = await db.query(sql, [tagId]);
+    res.render('games', { games: rows, title: `Games with Tag #${tagId}` });
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("Database Error");
+  }
+});
+
+// Route to show games filtered by a specific platform
+app.get('/platform/:id', async (req, res) => {
+  const platformId = req.params.id;
+  const sql = `
+    SELECT 
+      g.id, g.title, g.description, g.release_year, g.metacritic_score,
+      GROUP_CONCAT(DISTINCT t.name SEPARATOR ', ') AS tags,
+      GROUP_CONCAT(DISTINCT p.name SEPARATOR ', ') AS platforms
+    FROM games g
+    JOIN game_platforms gp_filter ON g.id = gp_filter.game_id
+    LEFT JOIN game_tags gt ON g.id = gt.game_id
+    LEFT JOIN tags t ON gt.tag_id = t.id
+    LEFT JOIN game_platforms gp ON g.id = gp.game_id
+    LEFT JOIN platforms p ON gp.platform_id = p.id
+    WHERE gp_filter.platform_id = ?
+    GROUP BY g.id`;
+
+  try {
+    const [rows] = await db.query(sql, [platformId]);
+    res.render('games', { games: rows, title: `Games on Platform #${platformId}` });
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("Database Error");
+  }
+});
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
