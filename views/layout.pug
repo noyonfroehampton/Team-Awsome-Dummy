@@ -8,6 +8,9 @@ html
       .logo-container
         img(src="/images/logo.png", alt="Gamespace Logo", class="logo-placeholder")
       nav.nav-links
+        form(action="/search" method="GET" class="search-form")
+        input(type="text" name="q" placeholder="Search games and posts..." required)
+        button(type="submit") Search
         a(href="/categories") Categories
         a(href="/games") Games List
         a(href="/posts") Posts
