@@ -36,6 +36,55 @@ CREATE TABLE IF NOT EXISTS game_platforms (
     FOREIGN KEY (platform_id) REFERENCES platforms(id) ON DELETE CASCADE
 );
 
+CREATE TABLE users (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    full_name VARCHAR(255) NOT NULL,
+    nickname VARCHAR(100) UNIQUE NOT NULL,
+    email VARCHAR(255) NOT NULL UNIQUE,
+    date_joined TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    bio TEXT
+);
+
+CREATE TABLE flairs(
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    Flair_Name VARCHAR(255) NOT NULL UNIQUE
+);
+
+CREATE TABLE posts (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT NOT NULL,
+    title VARCHAR(255) NOT NULL,
+    description TEXT NOT NULL,
+    flair_id INT,
+    game VARCHAR(255),
+    platform VARCHAR(255),
+    post_timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    total_rating INT DEFAULT 0,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+    FOREIGN KEY (flair_id) REFERENCES flairs(id) ON DELETE SET NULL
+);
+
+CREATE TABLE post_ratings (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    post_id INT NOT NULL,
+    user_id INT NOT NULL,
+    rating_value INT NOT NULL, 
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (post_id) REFERENCES posts(id) ON DELETE CASCADE,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+    UNIQUE (post_id, user_id)
+);
+
+CREATE TABLE comments (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    post_id INT NOT NULL,
+    user_id INT NOT NULL,
+    comment_text TEXT NOT NULL,
+    comment_timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (post_id) REFERENCES posts(id) ON DELETE CASCADE,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+);
+
 -- Insert Platform Data
 INSERT INTO platforms (name) VALUES
     ('Windows'),
@@ -219,3 +268,28 @@ INSERT INTO game_platforms (game_id, platform_id) VALUES
 (75, 12), (76, 12), (77, 1), (78, 1), (79, 1), (80, 1), (81, 1), (82, 1), (83, 1), (84, 1), (85, 1), (86, 1),
 (87, 1), (87, 14), (88, 1), (88, 14), (89, 7), (90, 8), (91, 20), (92, 20), (93, 5), (94, 10), (95, 14), (96, 14),
 (97, 15), (98, 12), (99, 12), (100, 12);-- Create Platforms Table
+
+INSERT INTO users (full_name, nickname, email, date_joined, bio) VALUES
+('Alice Smith', 'alice', 'alice@example.com', CURRENT_TIMESTAMP, 'Alice is a passionate gamer and content creator.'),
+('Bob Johnson', 'bob', 'bob@example.com', CURRENT_TIMESTAMP, 'Bob is an enthusiastic player and reviewer.'),
+('Charlie Brown', 'charlie', 'charlie@example.com', CURRENT_TIMESTAMP, 'Charlie loves RPGs and strategy games.'),
+('Diana Prince', 'diana', 'diana@example.com', CURRENT_TIMESTAMP, 'Diana is a dedicated gamer and content creator.');
+
+INSERT INTO flairs (Flair_Name) VALUES
+('Discussion'),
+('Question'),
+('Review'),
+('News'),
+('Guide'),
+('Memes');
+
+INSERT INTO posts (user_id, title, description, flair_id, game, platform, post_timestamp, total_rating) VALUES
+(1, 'My First Post', 'This is the description for my first post.', 1, 1, 1, CURRENT_TIMESTAMP, 4.5),
+(2, 'Great Game!', 'I just finished playing this amazing game.', 3, 2, 2, CURRENT_TIMESTAMP, 4.8),
+(3, 'Strategy Tips', 'Here are some tips for improving your strategy skills.', 6, 3, 3, CURRENT_TIMESTAMP, 4.2);
+
+INSERT INTO comments (post_id, user_id, comment_text, comment_timestamp) VALUES
+(1, 2, 'Great post! I enjoyed reading it.', CURRENT_TIMESTAMP),
+(1, 3, 'Thanks for sharing your thoughts!', CURRENT_TIMESTAMP),
+(2, 1, 'I agree, this game is fantastic!', CURRENT_TIMESTAMP),
+(3, 4, 'These tips are really helpful, thanks!', CURRENT_TIMESTAMP);

@@ -102,6 +102,85 @@ app.get('/games', async (req, res) => {
   }
 });
 
+// Add this route to your app.js or router
+app.get('/user/:id', async (req, res) => {
+    const userId = req.params.id;
+
+    try {
+        // 1. Fetch User Data
+        const [userResult] = await db.query('SELECT * FROM users WHERE id = ?', [userId]);
+        
+        if (userResult.length === 0) {
+            return res.status(404).send('User not found');
+        }
+        const user = userResult[0];
+
+        // 2. Fetch User Posts (Joining with flairs to get the flair name)
+        const postQuery = `
+            SELECT p.*, f.Flair_Name 
+            FROM posts p 
+            LEFT JOIN flairs f ON p.flair_id = f.id 
+            WHERE p.user_id = ? 
+            ORDER BY p.post_timestamp DESC
+        `;
+        const [posts] = await db.query(postQuery, [userId]);
+
+        // 3. Render the Pug template
+        res.render('profile', { 
+            title: `${user.full_name}'s Profile`, 
+            user: user, 
+            posts: posts 
+        });
+
+    } catch (error) {
+        console.error("Database error:", error);
+        res.status(500).send("Internal Server Error");
+    }
+});
+
+// Add this route to your app.js
+app.get('/post/:id', async (req, res) => {
+    const postId = req.params.id;
+
+    try {
+        // 1. Fetch Post Data (Joining users for nickname and flairs for flair name)
+        const postQuery = `
+            SELECT p.*, u.nickname, f.Flair_Name 
+            FROM posts p
+            JOIN users u ON p.user_id = u.id
+            LEFT JOIN flairs f ON p.flair_id = f.id
+            WHERE p.id = ?
+        `;
+        const [postResult] = await db.query(postQuery, [postId]);
+        
+        if (postResult.length === 0) {
+            return res.status(404).send('Post not found');
+        }
+        const post = postResult[0];
+
+        // 2. Fetch Comments for this post (Joining users to get the commenter's nickname)
+        const commentsQuery = `
+            SELECT c.*, u.nickname 
+            FROM comments c
+            JOIN users u ON c.user_id = u.id
+            WHERE c.post_id = ?
+            ORDER BY c.comment_timestamp ASC
+        `;
+        const [comments] = await db.query(commentsQuery, [postId]);
+
+        // 3. Render the Pug template
+        res.render('post', { 
+            title: post.title, 
+            post: post, 
+            comments: comments 
+        });
+
+    } catch (error) {
+        console.error("Database error:", error);
+        res.status(500).send("Internal Server Error");
+    }
+});
+
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`Server running at http://localhost:${PORT}/`);

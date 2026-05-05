@@ -1,0 +1,46 @@
+extends layout
+
+block content
+  .profile-container
+    //- Top Section: Profile Header
+    .profile-header
+      .profile-pic
+        //- Placeholder for profile picture (since we didn't add it to DB yet)
+        .circle-avatar
+          span= user.full_name.charAt(0)
+      
+      .profile-bio
+        if user.bio
+          p= user.bio
+        else
+          p No bio provided.
+          
+      .profile-info
+        p 
+          strong Member Since: 
+          //- Formatting the date nicely. 
+          | #{new Date(user.date_joined).toLocaleDateString()}
+        p 
+          strong Email: 
+          | #{user.email}
+
+    //- Bottom Section: User Posts
+    .profile-posts-section
+      .posts-header
+        h3 User post
+
+      .posts-list
+        if posts.length > 0
+          each post in posts
+            .post-card
+              .post-left
+                h4= post.title
+                p.post-date= new Date(post.post_timestamp).toLocaleDateString()
+              
+              .post-right
+                //- Handles the left join: if Flair_Name exists, show it. Otherwise "None".
+                p.post-flair Post flair: #{post.Flair_Name ? post.Flair_Name : 'None'}
+                p.post-feedback Rating: #{post.total_rating} / 5
+        else
+          .no-posts
+            p This user has not posted anything yet.

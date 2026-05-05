@@ -1,0 +1,52 @@
+extends layout
+
+block content
+  .single-post-container
+    .post-main-box
+      //- Top Section: Nickname
+      p.post-author Nickname: #{post.nickname}
+      
+      .post-header-flex
+        //- Left side: Title
+        .post-title-box
+          h2= post.title
+        
+        //- Right side: Meta info
+        .post-meta-box
+          p Post flair: #{post.Flair_Name ? post.Flair_Name : 'None'}
+          if post.game
+            p Game: #{post.game}
+          if post.platform
+            p Platform: #{post.platform}
+          p Date posted: #{new Date(post.post_timestamp).toLocaleDateString()}
+
+      //- Middle Section: Description
+      .post-description-box
+        h4 Post description:
+        p.description-text= post.description
+        
+        //- Bottom Right of Description: Rating
+        .post-rating-box
+          span Total Rating: #{post.total_rating}
+
+      //- Bottom Section: Comments
+      .post-comments-box
+        h4 Comments
+        
+        //- Check if the array has any comments in it
+        if comments.length > 0
+          
+          //- Loop through each comment in the array
+          each comment in comments
+            .comment-item
+              .comment-header
+                //- Display the commenter's nickname and the formatted date
+                strong.comment-author= comment.nickname
+                span.comment-date= new Date(comment.comment_timestamp).toLocaleString()
+              
+              //- Display the actual comment text
+              p.comment-text= comment.comment_text
+              
+        //- If the array is empty, show this instead
+        else
+          p.no-comments This post has no comments yet. Be the first to reply!
