@@ -84,3 +84,68 @@ section {
   max-height: 50px;
   background: #ccc; /* Temporary visual if image is missing */
 }
+
+/* Categories Page Specific Styles */
+.categories-container {
+  padding: 40px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.section-divider {
+  margin: 40px 0;
+  border: 0;
+  border-top: 2px solid #ddd;
+}
+
+/* Tag Bubbles (Top Section) */
+.bubble-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+  margin-top: 20px;
+}
+
+.tag-bubble {
+  background-color: var(--accent-orange);
+  color: white;
+  padding: 10px 25px;
+  border-radius: 50px; /* Pill shape */
+  text-decoration: none;
+  font-weight: bold;
+  transition: transform 0.2s;
+}
+
+.tag-bubble:hover {
+  transform: scale(1.1);
+  background-color: var(--primary-blue);
+}
+
+/* Platform Cards (Bottom Section) */
+.platform-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 20px;
+  margin-top: 20px;
+}
+
+.platform-card {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100px;
+  background-color: white;
+  border: 3px solid var(--primary-blue);
+  border-radius: 15px; /* Rounded box */
+  text-decoration: none;
+  color: var(--primary-blue);
+  font-size: 1.2rem;
+  font-weight: bold;
+  transition: all 0.3s;
+}
+
+.platform-card:hover {
+  background-color: var(--primary-blue);
+  color: white;
+  border-color: var(--accent-orange);
+}

@@ -8,6 +8,11 @@ services:
     volumes:
       - db_data:/var/lib/mysql
       - ./sd2-db.sql:/docker-entrypoint-initdb.d/sd2-db.sql
+    # This tells Docker how to check if MySQL is actually ready
+    healthcheck:
+      test: ["CMD", "mysqladmin" ,"ping", "-h", "localhost"]
+      timeout: 5s
+      retries: 10
 
   web:
     build: .
@@ -15,10 +20,11 @@ services:
       - "3000:3000"
     env_file: .env
     depends_on:
-      - db
+      db:
+        condition: service_healthy # This forces web to wait until the healthcheck passes
     volumes:
       - .:/usr/src/app
-      - /usr/src/app/node_modules # Important: protects container dependencies
+      - /usr/src/app/node_modules
 
   phpmyadmin:
     image: phpmyadmin:latest

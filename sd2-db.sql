@@ -42,7 +42,7 @@ INSERT INTO platforms (name) VALUES
     ('Sega Game Gear'),
     ('Sega Master System'),
     ('Sega CD'),
-    ('Sega 32X'),
+    ('Sega 32X');
 
 
 -- Insert Tag Data (Extracted from your screenshot)
@@ -57,4 +57,4 @@ INSERT INTO tags (name) VALUES
     ('Role-Playing'),
     ('Simulation'),
     ('Sports'),
-    ('Strategy')
+    ('Strategy');
