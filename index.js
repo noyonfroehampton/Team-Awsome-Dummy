@@ -261,22 +261,6 @@ app.get('/posts', async (req, res) => {
     }
 });
 
-app.get('/search', async (req, res) => {
-    const query = req.query.q;
-    if (!query) return res.redirect('/');
-
-    try {
-        const results = await db.searchContent(query);
-        res.render('search-results', { 
-            query, 
-            games: results.games, 
-            posts: results.posts 
-        });
-    } catch (err) {
-        console.error(err);
-        res.status(500).send("Search error");
-    }
-});
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
